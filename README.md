@@ -1,0 +1,1 @@
+# iocage-plugin-zabbix6-server
