@@ -47,11 +47,22 @@ service mysql-server start
 mysql_random_pass=$(openssl rand -hex 10)
 mysql_admin_pass=$(awk NR==2 /root/.mysql_secret)
 mysql_admin_random_pass=$(openssl rand -hex 10)
-echo "set password = password('$mysql_admin_random_pass'); flush privileges;" >> updateroot.sql
+
+# Create  secure sql script
+echo "UPDATE mysql.user SET Password=PASSWORD('$mysql_admin_random_pass') WHERE User='root';" >> secure_mysql.sql
+echo "DELETE FROM mysql.user WHERE User='';" >> secure_mysql.sql
+echo "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');" >> secure_mysql.sql
+echo "DROP DATABASE IF EXISTS test;" >> secure_mysql.sql
+echo "DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';" >> secure_mysql.sql
+echo "FLUSH PRIVILEGES;" >> secure_mysql.sql
+
+# Create zabbix sql script
 echo "create database zabbix character set utf8 collate utf8_bin;" >> createzabbixuser.sql
 echo "CREATE USER 'zabbix'@'localhost' IDENTIFIED BY '$mysql_random_pass';" >> createzabbixuser.sql
 echo "GRANT ALL PRIVILEGES ON zabbix.* TO 'zabbix'@'localhost';" >> createzabbixuser.sql
-mysql -u root --password="$mysql_admin_pass" --connect-expired-password < updateroot.sql 
+
+# Run sql scripts
+mysql -u root < secure_mysql.sql 
 mysql -u root --password="$mysql_admin_random_pass" < createzabbixuser.sql 
 mysql -u root --password="$mysql_admin_random_pass" zabbix < /usr/local/share/zabbix6/server/database/mysql/schema.sql 
 mysql -u root --password="$mysql_admin_random_pass" zabbix < /usr/local/share/zabbix6/server/database/mysql/images.sql 
