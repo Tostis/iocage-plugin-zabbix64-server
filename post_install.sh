@@ -44,8 +44,15 @@ sed -i php.ini s/\;date\.timezone\ \=\/date\.timezone\ \=\ America\\/Chicago/g /
 # Creating zabbix DB and user
 echo -n "Creating Zabbix DB and user..."
 service mysql-server start 
+status=$(service mysql-server status | grep "is running")
+
+while [ '$status' = '' ];
+do
+  echo 'Waiting for Mysql to start'
+  sleep 10
+done
+
 mysql_random_pass=$(openssl rand -hex 10)
-mysql_admin_pass=$(awk NR==2 /root/.mysql_secret)
 mysql_admin_random_pass=$(openssl rand -hex 10)
 
 # Create  secure sql script
