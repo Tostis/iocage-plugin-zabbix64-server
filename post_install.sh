@@ -57,7 +57,7 @@ mysql_random_pass=$(openssl rand -hex 10)
 mysql_admin_random_pass=$(openssl rand -hex 10)
 
 # Create  secure sql script
-echo "UPDATE mysql.user SET Password=PASSWORD('$mysql_admin_random_pass') WHERE User='root';" >> secure_mysql.sql
+echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '$mysql_admin_random_pass';" >> secure_mysql.sql
 echo "DELETE FROM mysql.user WHERE User='';" >> secure_mysql.sql
 echo "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');" >> secure_mysql.sql
 echo "DROP DATABASE IF EXISTS test;" >> secure_mysql.sql
