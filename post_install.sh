@@ -44,10 +44,11 @@ sed -i php.ini s/\;date\.timezone\ \=\/date\.timezone\ \=\ America\\/Chicago/g /
 # Creating zabbix DB and user
 echo -n "Creating Zabbix DB and user..."
 service mysql-server start 
-status=$(service mysql-server status | grep "is running")
+status=$(service mysql-server status)
 
-while [ '$status' = '' ];
+while [ "$status" = 'mysql is not running.' ];
 do
+  status=$(service mysql-server status)
   echo 'Waiting for Mysql to start'
   sleep 10
 done
