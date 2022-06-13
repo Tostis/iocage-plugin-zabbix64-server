@@ -70,11 +70,11 @@ echo "CREATE USER 'zabbix'@'localhost' IDENTIFIED BY '$mysql_random_pass';" >> c
 echo "GRANT ALL PRIVILEGES ON zabbix.* TO 'zabbix'@'localhost';" >> createzabbixuser.sql
 
 # Run sql scripts
+mysql -u root < createzabbixuser.sql 
+mysql -u root zabbix < /usr/local/share/zabbix6/server/database/mysql/schema.sql 
+mysql -u root zabbix < /usr/local/share/zabbix6/server/database/mysql/images.sql 
+mysql -u root zabbix < /usr/local/share/zabbix6/server/database/mysql/data.sql 
 mysql -u root < secure_mysql.sql 
-mysql -u root --password="$mysql_admin_random_pass" < createzabbixuser.sql 
-mysql -u root --password="$mysql_admin_random_pass" zabbix < /usr/local/share/zabbix6/server/database/mysql/schema.sql 
-mysql -u root --password="$mysql_admin_random_pass" zabbix < /usr/local/share/zabbix6/server/database/mysql/images.sql 
-mysql -u root --password="$mysql_admin_random_pass" zabbix < /usr/local/share/zabbix6/server/database/mysql/data.sql 
 echo " ok"
 
 # update zabbix.conf.php file
