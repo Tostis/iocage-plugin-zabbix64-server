@@ -66,7 +66,7 @@ echo "FLUSH PRIVILEGES;" >> secure_mysql.sql
 
 # Create zabbix sql script
 echo "create database zabbix character set utf8 collate utf8_bin;" >> createzabbixuser.sql
-echo "CREATE USER 'zabbix'@'localhost' IDENTIFIED BY '$mysql_random_pass';" >> createzabbixuser.sql
+echo "CREATE USER 'zabbix'@'localhost' IDENTIFIED WITH mysql_native_password BY '$mysql_random_pass';" >> createzabbixuser.sql
 echo "GRANT ALL PRIVILEGES ON zabbix.* TO 'zabbix'@'localhost';" >> createzabbixuser.sql
 
 # Run sql scripts
