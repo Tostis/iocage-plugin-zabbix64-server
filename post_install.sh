@@ -12,9 +12,9 @@ sysrc mysql_enable="YES"
 # Copy sample files to config files
 echo "Creating Zabbix config files..."
 ZABBIX_CONFIG_URI="https://raw.githubusercontent.com/xTITUSMAXIMUSX/iocage-plugin-zabbix6-server/master/zabbix.conf.php"
-/usr/bin/fetch -o /usr/local/www/zabbix6/conf/zabbix.conf.php ${ZABBIX_CONFIG_URI} 
-cp /usr/local/etc/zabbix6/zabbix_agentd.conf.sample /usr/local/etc/zabbix6/zabbix_agentd.conf 
-cp /usr/local/etc/zabbix6/zabbix_server.conf.sample /usr/local/etc/zabbix6/zabbix_server.conf 
+/usr/bin/fetch -o /usr/local/www/zabbix64/conf/zabbix.conf.php ${ZABBIX_CONFIG_URI} 
+cp /usr/local/etc/zabbix64/zabbix_agentd.conf.sample /usr/local/etc/zabbix64/zabbix_agentd.conf 
+cp /usr/local/etc/zabbix64/zabbix_server.conf.sample /usr/local/etc/zabbix64/zabbix_server.conf 
 
 
 # update nginx conf
@@ -71,18 +71,18 @@ echo "GRANT ALL PRIVILEGES ON zabbix.* TO 'zabbix'@'localhost';" >> createzabbix
 
 # Run sql scripts
 mysql -u root < createzabbixuser.sql 
-mysql -u root zabbix < /usr/local/share/zabbix6/server/database/mysql/schema.sql 
-mysql -u root zabbix < /usr/local/share/zabbix6/server/database/mysql/images.sql 
-mysql -u root zabbix < /usr/local/share/zabbix6/server/database/mysql/data.sql 
+mysql -u root zabbix < /usr/local/share/zabbix64/server/database/mysql/schema.sql 
+mysql -u root zabbix < /usr/local/share/zabbix64/server/database/mysql/images.sql 
+mysql -u root zabbix < /usr/local/share/zabbix64/server/database/mysql/data.sql 
 mysql -u root < secure_mysql.sql 
 echo " ok"
 
 # update zabbix.conf.php file
-sed -i zabbix.conf.php "9s/'';/'$mysql_random_pass';/g" /usr/local/www/zabbix6/conf/zabbix.conf.php
-chown -R www:www /usr/local/www/zabbix6/conf/ 
+sed -i zabbix.conf.php "9s/'';/'$mysql_random_pass';/g" /usr/local/www/zabbix64/conf/zabbix.conf.php
+chown -R www:www /usr/local/www/zabbix64/conf/ 
 
 # Add DB password to zabbix server config
-sed -i zabbix_server.conf "s/# DBPassword=/DBPassword=$mysql_random_pass/g" /usr/local/etc/zabbix6/zabbix_server.conf
+sed -i zabbix_server.conf "s/# DBPassword=/DBPassword=$mysql_random_pass/g" /usr/local/etc/zabbix64/zabbix_server.conf
 
 #Adding Usernames and passwords to post install notes
 echo "Mysql Root Password: $mysql_admin_random_pass" > /root/PLUGIN_INFO
